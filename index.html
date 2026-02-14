@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Be My Valentine ❤️</title>
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    font-family:Arial, sans-serif;
+    background:linear-gradient(135deg,#ff6fa5,#ffc2d1,#ffd6e0);
+    overflow:hidden;
+}
+
+h1{
+    font-size:3rem;
+    color:white;
+    text-align:center;
+    border-right:3px solid white;
+    white-space:nowrap;
+    overflow:hidden;
+    text-shadow:0 0 15px rgba(255,255,255,0.7);
+}
+
+.buttons{
+    margin-top:20px;
+}
+
+button{
+    padding:12px 25px;
+    font-size:18px;
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    margin:10px;
+    transition:0.3s;
+}
+
+#yesBtn{
+    background:#ff4d88;
+    color:white;
+    box-shadow:0 0 15px rgba(255,105,180,0.7);
+}
+
+#noBtn{
+    background:white;
+}
+
+#message{
+    color:white;
+    font-size:1.5rem;
+    margin-top:10px;
+    height:30px;
+}
+
+#popup{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(255,105,180,0.35);
+    backdrop-filter:blur(10px);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 1s ease;
+}
+
+#popup img{
+    width:260px;
+    border-radius:20px;
+    transform:scale(0.5);
+    animation:pop 1.5s forwards;
+    box-shadow:0 0 25px rgba(255,255,255,0.8);
+}
+
+@keyframes pop{
+    to{transform:scale(1);}
+}
+
+#popup h2{
+    color:white;
+    font-size:2rem;
+    text-shadow:0 0 10px white;
+}
+
+.heart{
+    position:absolute;
+    bottom:-20px;
+    font-size:20px;
+    animation:floatUp linear infinite;
+}
+
+@keyframes floatUp{
+    from{transform:translateY(0);opacity:1;}
+    to{transform:translateY(-110vh);opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<h1 id="typing"></h1>
+
+<div class="buttons">
+    <button id="yesBtn">Yes 💖</button>
+    <button id="noBtn">No 🙃</button>
+</div>
+
+<div id="message"></div>
+
+<div id="popup">
+    <img src="myphoto.jpg">
+    <h2>Yayyy!! lessgoooo bbg 🌸</h2>
+</div>
+
+<script>
+/* Typing animation */
+const text = "Will you be my valentine? ❤️";
+let i = 0;
+const typingEl = document.getElementById("typing");
+
+function typeEffect(){
+    if(i < text.length){
+        typingEl.innerHTML += text.charAt(i);
+        i++;
+        setTimeout(typeEffect,60);
+    }
+}
+typeEffect();
+
+/* Buttons logic */
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const popup = document.getElementById("popup");
+const message = document.getElementById("message");
+
+yesBtn.addEventListener("click",()=>{
+    popup.style.opacity="1";
+    popup.style.pointerEvents="auto";
+});
+
+/* NEW NO button behaviour 😈 */
+let noClicks = 0;
+let scale = 1;
+
+const denialTexts = [
+    "Think again 🤨",
+    "Are you sure? 🥺",
+    "Last chance… 😭"
+];
+
+noBtn.addEventListener("click",()=>{
+    noClicks++;
+
+    if(noClicks <= 3){
+        message.innerText = denialTexts[noClicks-1];
+        scale -= 0.2;
+        noBtn.style.transform = "scale("+scale+")";
+    }
+
+    if(noClicks === 4){
+        message.innerText = "Okay fine… you have no choice 😌";
+        noBtn.style.display = "none";
+    }
+});
+
+/* Floating hearts */
+function createHeart(){
+    const heart = document.createElement("div");
+    heart.classList.add("heart");
+    heart.innerHTML = "💖";
+    heart.style.left = Math.random()*100+"vw";
+    heart.style.animationDuration = (3 + Math.random()*3)+"s";
+    heart.style.fontSize = (15 + Math.random()*25)+"px";
+    document.body.appendChild(heart);
+
+    setTimeout(()=>heart.remove(),6000);
+}
+setInterval(createHeart,300);
+</script>
+
+</body>
+</html>
