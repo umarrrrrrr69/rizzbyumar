@@ -1,193 +1,476 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Be My Valentine ❤️</title>
-
+<title>umar & alisha</title>
 <style>
-body{
-    margin:0;
-    height:100vh;
+  :root{
+    --bg-deep:#1b1626;
+    --bg-panel:#241c33;
+    --plum:#3a2a4d;
+    --cream:#f6ead9;
+    --coral:#ff9d7a;
+    --pink:#ff6f91;
+    --gold:#ffcf6b;
+
+    /* Umar — warm orange tabby */
+    --umar-main:#ef9a4e;
+    --umar-dark:#c9752b;
+
+    /* Alisha — cool lilac-grey with pink accents */
+    --alisha-main:#a48fd6;
+    --alisha-dark:#7d64b8;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;margin:0;}
+  body{
+    background:radial-gradient(ellipse at 50% 20%, var(--plum), var(--bg-deep) 70%);
+    font-family:'Courier New', ui-monospace, monospace;
+    color:var(--cream);
     display:flex;
-    justify-content:center;
     align-items:center;
-    flex-direction:column;
-    font-family:Arial, sans-serif;
-    background:linear-gradient(135deg,#ff6fa5,#ffc2d1,#ffd6e0);
+    justify-content:center;
     overflow:hidden;
-}
-
-h1{
-    font-size:3rem;
-    color:white;
-    text-align:center;
-    border-right:3px solid white;
-    white-space:nowrap;
+    -webkit-font-smoothing:antialiased;
+  }
+  #stage{
+    width:420px;
+    max-width:92vw;
+    height:640px;
+    max-height:92vh;
+    background:var(--bg-panel);
+    border-radius:18px;
+    box-shadow:0 30px 80px rgba(0,0,0,.6), inset 0 0 0 1px rgba(255,255,255,.05);
+    position:relative;
     overflow:hidden;
-    text-shadow:0 0 15px rgba(255,255,255,0.7);
-}
-
-.buttons{
-    margin-top:20px;
-}
-
-button{
-    padding:12px 25px;
-    font-size:18px;
-    border:none;
-    border-radius:12px;
-    cursor:pointer;
-    margin:10px;
-    transition:0.3s;
-}
-
-#yesBtn{
-    background:#ff4d88;
-    color:white;
-    box-shadow:0 0 15px rgba(255,105,180,0.7);
-}
-
-#noBtn{
-    background:white;
-}
-
-#message{
-    color:white;
-    font-size:1.5rem;
-    margin-top:10px;
-    height:30px;
-}
-
-#popup{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:rgba(255,105,180,0.35);
-    backdrop-filter:blur(10px);
     display:flex;
-    justify-content:center;
-    align-items:center;
     flex-direction:column;
+  }
+  #stars{position:absolute; inset:0; pointer-events:none;}
+  .star{position:absolute; width:2px; height:2px; background:var(--cream); border-radius:50%; opacity:.5; animation:twinkle 3s infinite ease-in-out;}
+  @keyframes twinkle{0%,100%{opacity:.15} 50%{opacity:.8}}
+
+  #sceneArea{
+    flex:1;
+    position:relative;
+    display:flex;
+    align-items:flex-end;
+    justify-content:center;
+    padding-bottom:20px;
+  }
+
+  /* ---- Sprite scaffolding ----
+     Each cat is built from layered CSS shapes so no external
+     image files are required. Color comes from --cat-main /
+     --cat-dark, set per-cat via .cat.umar / .cat.alisha.
+     Swap these divs for <img> sprite frames later — see notes
+     under the chat message below the code. */
+  .cat{
+    position:absolute;
+    width:110px;
+    height:110px;
+    transition:transform .6s ease, left .8s ease;
+  }
+  .cat.umar{ --cat-main:var(--umar-main); --cat-dark:var(--umar-dark); }
+  .cat.alisha{ --cat-main:var(--alisha-main); --cat-dark:var(--alisha-dark); }
+
+  .cat .name{
+    position:absolute; top:-22px; left:0; right:0;
+    text-align:center; font-size:10px; letter-spacing:.12em;
+    text-transform:uppercase; color:rgba(246,234,217,.55);
+  }
+  .cat .body{
+    position:absolute;
+    bottom:0; left:15px;
+    width:80px; height:62px;
+    background:var(--cat-main);
+    border-radius:50% 50% 46% 46%;
+    box-shadow:inset 0 -10px 14px rgba(0,0,0,.15);
+  }
+  .cat .stripe{
+    position:absolute; bottom:6px; height:44px; width:9px;
+    background:var(--cat-dark);
+    border-radius:4px; opacity:.55;
+  }
+  .cat .stripe.s1{left:24px}
+  .cat .stripe.s2{left:44px}
+  .cat .stripe.s3{left:64px}
+  .cat .head{
+    position:absolute; top:0; left:26px;
+    width:58px; height:50px;
+    background:var(--cat-main);
+    border-radius:50% 50% 45% 45%;
+    box-shadow:inset 0 -6px 10px rgba(0,0,0,.12);
+  }
+  .cat .ear{
+    position:absolute; top:-14px;
+    width:0; height:0;
+    border-left:13px solid transparent;
+    border-right:13px solid transparent;
+    border-bottom:22px solid var(--cat-main);
+  }
+  .cat .ear.left{left:24px; transform:rotate(-8deg); transform-origin:bottom center;}
+  .cat .ear.right{left:56px; transform:rotate(8deg); transform-origin:bottom center;}
+  .cat .eye{
+    position:absolute; top:20px; width:6px; height:8px;
+    background:#20141a; border-radius:50%;
+  }
+  .cat .eye.l{left:36px}
+  .cat .eye.r{left:56px}
+  .cat .blush{
+    position:absolute; top:30px; width:10px; height:5px;
+    background:var(--pink); border-radius:50%; opacity:.6;
+  }
+  .cat .blush.l{left:26px}
+  .cat .blush.r{left:64px}
+  .cat .nose{
+    position:absolute; top:27px; left:44px; width:0; height:0;
+    border-left:4px solid transparent; border-right:4px solid transparent;
+    border-top:5px solid #8a4f2b;
+  }
+  .cat .bow{
+    position:absolute; top:-2px; left:50px; width:14px; height:10px;
+    background:var(--pink);
+    clip-path:polygon(0 0,50% 50%,0 100%,100% 100%,50% 50%,100% 0);
+    display:none;
+  }
+  .cat.alisha .bow{ display:block; }
+  .cat .tail{
+    position:absolute; bottom:6px; right:-14px;
+    width:40px; height:12px;
+    background:var(--cat-main);
+    border-radius:20px;
+    transform-origin:left center;
+    animation:tailwag 1.6s ease-in-out infinite;
+  }
+  @keyframes tailwag{0%,100%{transform:rotate(0deg)} 50%{transform:rotate(-18deg)}}
+
+  .cat.left{left:26%; transform:translateX(-50%) scaleX(1);}
+  .cat.right{left:74%; transform:translateX(-50%) scaleX(-1);}
+
+  /* begging bounce (Umar) */
+  .cat.begging{animation:beg 0.9s ease-in-out infinite;}
+  @keyframes beg{
+    0%,100%{transform:translateX(-50%) translateY(0) scaleX(1);}
+    50%{transform:translateX(-50%) translateY(-14px) scaleX(1);}
+  }
+
+  /* "nope" head shake (Alisha) */
+  .cat.right.shake{animation:shakeR 0.5s ease-in-out;}
+  @keyframes shakeR{
+    0%,100%{transform:translateX(-50%) rotate(0deg) scaleX(-1);}
+    25%{transform:translateX(-50%) rotate(-6deg) scaleX(-1);}
+    75%{transform:translateX(-50%) rotate(6deg) scaleX(-1);}
+  }
+
+  /* smug / laugh little pop (Alisha) */
+  .cat.right.pop{animation:popR 0.5s ease-in-out;}
+  @keyframes popR{
+    0%,100%{transform:translateX(-50%) translateY(0) scaleX(-1);}
+    50%{transform:translateX(-50%) translateY(-8px) scaleX(-1) scale(1.05);}
+  }
+
+  /* happy bounce (Umar), mirrored scale */
+  .cat.left.pop{animation:popL 0.5s ease-in-out;}
+  @keyframes popL{
+    0%,100%{transform:translateX(-50%) translateY(0) scaleX(1);}
+    50%{transform:translateX(-50%) translateY(-10px) scaleX(1) scale(1.05);}
+  }
+
+  /* kiss: cats slide together */
+  .cat.kiss-left{left:42%; transform:translateX(-50%) scaleX(1);}
+  .cat.kiss-right{left:58%; transform:translateX(-50%) scaleX(-1);}
+
+  .heart-float{
+    position:absolute;
+    font-size:20px;
+    opacity:0;
+    animation:floatUp 1.8s ease-in forwards;
+    pointer-events:none;
+  }
+  @keyframes floatUp{
+    0%{opacity:0; transform:translateY(0) scale(.5);}
+    15%{opacity:1;}
+    100%{opacity:0; transform:translateY(-90px) scale(1.2);}
+  }
+
+  /* camera flash for the CLICK! moment */
+  .flash{
+    position:absolute; inset:0;
+    background:#fff;
     opacity:0;
     pointer-events:none;
-    transition:opacity 1s ease;
-}
+    animation:flashPulse .5s ease-out forwards;
+    z-index:3;
+  }
+  @keyframes flashPulse{
+    0%{opacity:0;}
+    15%{opacity:.9;}
+    100%{opacity:0;}
+  }
+  .camera-emoji{
+    position:absolute; top:20%; left:50%;
+    transform:translate(-50%,-50%) scale(0);
+    font-size:38px;
+    animation:camPop .6s cubic-bezier(.34,1.56,.64,1) forwards;
+  }
+  @keyframes camPop{
+    0%{transform:translate(-50%,-50%) scale(0);}
+    60%{transform:translate(-50%,-50%) scale(1.2);}
+    100%{transform:translate(-50%,-50%) scale(1);}
+  }
 
-#popup img{
-    width:260px;
-    border-radius:20px;
-    transform:scale(0.5);
-    animation:pop 1.5s forwards;
-    box-shadow:0 0 25px rgba(255,255,255,0.8);
-}
+  /* ---- Dialogue box ---- */
+  #dialogueWrap{padding:16px 18px 22px;}
+  #speaker{
+    font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--coral); margin-bottom:6px; min-height:14px;
+  }
+  #dialogueBox{
+    background:var(--bg-deep);
+    border:1px solid rgba(255,159,122,.25);
+    border-radius:10px;
+    padding:16px 18px;
+    font-size:15px;
+    line-height:1.5;
+    min-height:54px;
+    box-shadow:0 6px 18px rgba(0,0,0,.35);
+  }
+  #tapHint{
+    margin-top:10px;
+    font-size:11px;
+    color:rgba(246,234,217,.45);
+    text-align:right;
+  }
 
-@keyframes pop{
-    to{transform:scale(1);}
-}
+  /* ---- Title / play screen ---- */
+  #titleScreen{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:26px;
+    background:radial-gradient(ellipse at 50% 30%, var(--plum), var(--bg-deep) 75%);
+    z-index:5;
+  }
+  #titleScreen h1{
+    font-size:22px; letter-spacing:.06em; margin:0; text-align:center;
+    color:var(--cream);
+  }
+  #titleScreen .sub{color:rgba(246,234,217,.5); font-size:12px; letter-spacing:.1em;}
+  #playBtn{
+    font-family:inherit; font-size:14px; letter-spacing:.12em;
+    background:var(--coral); color:#2a1810; border:none;
+    padding:14px 34px; border-radius:999px; cursor:pointer;
+    box-shadow:0 8px 20px rgba(255,157,122,.35);
+    transition:transform .15s ease;
+  }
+  #playBtn:hover{transform:translateY(-2px) scale(1.03);}
+  #playBtn:active{transform:translateY(0) scale(.98);}
 
-#popup h2{
-    color:white;
-    font-size:2rem;
-    text-shadow:0 0 10px white;
-}
-
-.heart{
-    position:absolute;
-    bottom:-20px;
-    font-size:20px;
-    animation:floatUp linear infinite;
-}
-
-@keyframes floatUp{
-    from{transform:translateY(0);opacity:1;}
-    to{transform:translateY(-110vh);opacity:0;}
-}
+  #endBanner{
+    position:absolute; inset:0;
+    display:none;
+    align-items:center; justify-content:center; flex-direction:column; gap:14px;
+    background:radial-gradient(ellipse at 50% 40%, rgba(255,111,145,.25), transparent 70%);
+    z-index:4;
+  }
+  #endBanner.show{display:flex;}
+  #endBanner .yay{font-size:26px; color:var(--gold); letter-spacing:.08em;}
 </style>
 </head>
-
 <body>
 
-<h1 id="typing"></h1>
+<div id="stage">
+  <div id="stars"></div>
 
-<div class="buttons">
-    <button id="yesBtn">Yes 💖</button>
-    <button id="noBtn">No 🙃</button>
-</div>
+  <div id="titleScreen">
+    <h1>can i have some<br/>pics? 🥺👉👈</h1>
+    <div class="sub">umar &amp; alisha</div>
+    <button id="playBtn">▶ PLAY</button>
+  </div>
 
-<div id="message"></div>
+  <div id="sceneArea">
+    <!-- Umar -->
+    <div class="cat umar left" id="catUmar">
+      <div class="name">Umar</div>
+      <div class="tail"></div>
+      <div class="body"></div>
+      <div class="stripe s1"></div><div class="stripe s2"></div><div class="stripe s3"></div>
+      <div class="head"></div>
+      <div class="ear left"></div><div class="ear right"></div>
+      <div class="blush l"></div><div class="blush r"></div>
+      <div class="eye l"></div><div class="eye r"></div>
+      <div class="nose"></div>
+    </div>
+    <!-- Alisha -->
+    <div class="cat alisha right" id="catAlisha" style="display:none;">
+      <div class="name">Alisha</div>
+      <div class="tail"></div>
+      <div class="body"></div>
+      <div class="stripe s1"></div><div class="stripe s2"></div><div class="stripe s3"></div>
+      <div class="head"></div>
+      <div class="ear left"></div><div class="ear right"></div>
+      <div class="bow"></div>
+      <div class="blush l"></div><div class="blush r"></div>
+      <div class="eye l"></div><div class="eye r"></div>
+      <div class="nose"></div>
+    </div>
+  </div>
 
-<div id="popup">
-    <img src="myphoto.jpg">
-    <h2>Yayyy!! lessgoooo bbg 🌸</h2>
+  <div id="endBanner"><div class="yay">THE END ✨</div></div>
+
+  <div id="dialogueWrap">
+    <div id="speaker"></div>
+    <div id="dialogueBox">Tap play to start.</div>
+    <div id="tapHint">tap to continue ▸</div>
+  </div>
 </div>
 
 <script>
-/* Typing animation */
-const text = "Will you be my valentine? ❤️";
-let i = 0;
-const typingEl = document.getElementById("typing");
+const catUmar = document.getElementById('catUmar');
+const catAlisha = document.getElementById('catAlisha');
+const speakerEl = document.getElementById('speaker');
+const dialogueBox = document.getElementById('dialogueBox');
+const dialogueWrap = document.getElementById('dialogueWrap');
+const sceneArea = document.getElementById('sceneArea');
+const stage = document.getElementById('stage');
+const endBanner = document.getElementById('endBanner');
+const tapHint = document.getElementById('tapHint');
 
-function typeEffect(){
-    if(i < text.length){
-        typingEl.innerHTML += text.charAt(i);
-        i++;
-        setTimeout(typeEffect,60);
-    }
-}
-typeEffect();
-
-/* Buttons logic */
-const yesBtn = document.getElementById("yesBtn");
-const noBtn = document.getElementById("noBtn");
-const popup = document.getElementById("popup");
-const message = document.getElementById("message");
-
-yesBtn.addEventListener("click",()=>{
-    popup.style.opacity="1";
-    popup.style.pointerEvents="auto";
-});
-
-/* NEW NO button behaviour 😈 */
-let noClicks = 0;
-let scale = 1;
-
-const denialTexts = [
-    "Think again 🤨",
-    "Are you sure? 🥺",
-    "Last chance… 😭"
+// ---- Story script: mirrors the new flowchart exactly ----
+const script = [
+  { speaker:'Umar',   text:'Can I have some pics? 🥺👉👈',        action:'beg' },
+  { speaker:'Alisha', text:'Nope. 😼',                            action:'refuse' },
+  { speaker:'Umar',   text:'Pleeeeease? 🥺',                      action:'beg' },
+  { speaker:'Alisha', text:'Why should I? 😼',                    action:'shake' },
+  { speaker:'Umar',   text:"Because I'm cute. 🥺✨",               action:'beg' },
+  { speaker:'Alisha', text:"That's debatable. 😂",                action:'pop-alisha' },
+  { speaker:'Umar',   text:'Okay... one tiny pic? 🥺',            action:'beg' },
+  { speaker:'Alisha', text:'Ughhh... fine! 😭❤️',                  action:'relent' },
+  { speaker:'',       text:'📸 *CLICK!* ✨',                       action:'camera' },
+  { speaker:'Umar',   text:"YAYYY! You're the best! ❤️",          action:'pop-umar' },
+  { speaker:'Alisha', text:'I know. 😌',                          action:'pop-alisha' },
+  { speaker:'',       text:'💕 the cats share a kiss 💋',          action:'kiss' },
+  { speaker:'Umar',   text:'One more? 👀',                        action:'beg-post-kiss' },
+  { speaker:'Alisha', text:"DON'T PUSH IT. 😂",                   action:'shake' },
+  { speaker:'',       text:'THE END ✨',                          action:'end' },
 ];
 
-noBtn.addEventListener("click",()=>{
-    noClicks++;
+let step = -1;
 
-    if(noClicks <= 3){
-        message.innerText = denialTexts[noClicks-1];
-        scale -= 0.2;
-        noBtn.style.transform = "scale("+scale+")";
-    }
+function clearFloaters(){
+  document.querySelectorAll('.heart-float, .flash, .camera-emoji').forEach(el => el.remove());
+}
 
-    if(noClicks === 4){
-        message.innerText = "Okay fine… you have no choice 😌";
-        noBtn.style.display = "none";
-    }
+function spawnHeart(xPct){
+  const h = document.createElement('div');
+  h.className = 'heart-float';
+  h.textContent = '💗';
+  h.style.left = xPct + '%';
+  h.style.bottom = '60px';
+  sceneArea.appendChild(h);
+  setTimeout(() => h.remove(), 1900);
+}
+
+function bump(el, cls, duration){
+  el.classList.remove(cls); // reset if already applied
+  void el.offsetWidth;      // force reflow so animation restarts
+  el.classList.add(cls);
+  setTimeout(() => el.classList.remove(cls), duration);
+}
+
+function runAction(action){
+  switch(action){
+    case 'beg':
+      catUmar.classList.add('begging');
+      break;
+
+    case 'refuse':
+      catUmar.classList.remove('begging');
+      catAlisha.style.display = 'block';
+      bump(catAlisha, 'shake', 500);
+      break;
+
+    case 'shake':
+      catUmar.classList.remove('begging');
+      bump(catAlisha, 'shake', 500);
+      break;
+
+    case 'pop-alisha':
+      catUmar.classList.remove('begging');
+      bump(catAlisha, 'pop', 500);
+      break;
+
+    case 'relent':
+      catUmar.classList.remove('begging');
+      bump(catAlisha, 'pop', 500);
+      break;
+
+    case 'camera':
+      clearFloaters();
+      const flash = document.createElement('div');
+      flash.className = 'flash';
+      stage.appendChild(flash);
+      setTimeout(() => flash.remove(), 600);
+      const cam = document.createElement('div');
+      cam.className = 'camera-emoji';
+      cam.textContent = '📸';
+      sceneArea.appendChild(cam);
+      break;
+
+    case 'pop-umar':
+      bump(catUmar, 'pop', 500);
+      break;
+
+    case 'kiss':
+      clearFloaters();
+      catUmar.classList.remove('left'); catUmar.classList.add('kiss-left');
+      catAlisha.classList.remove('right'); catAlisha.classList.add('kiss-right');
+      spawnHeart(46);
+      setTimeout(() => spawnHeart(52), 300);
+      setTimeout(() => spawnHeart(49), 600);
+      break;
+
+    case 'beg-post-kiss':
+      catUmar.classList.add('begging');
+      break;
+
+    case 'end':
+      catUmar.classList.remove('begging');
+      setTimeout(() => endBanner.classList.add('show'), 300);
+      tapHint.style.visibility = 'hidden';
+      break;
+  }
+}
+
+function advance(){
+  step++;
+  if(step >= script.length){
+    return; // story over
+  }
+  const beat = script[step];
+  speakerEl.textContent = beat.speaker;
+  dialogueBox.textContent = beat.text;
+  runAction(beat.action);
+}
+
+document.getElementById('playBtn').addEventListener('click', () => {
+  document.getElementById('titleScreen').style.display = 'none';
+  advance();
 });
 
-/* Floating hearts */
-function createHeart(){
-    const heart = document.createElement("div");
-    heart.classList.add("heart");
-    heart.innerHTML = "💖";
-    heart.style.left = Math.random()*100+"vw";
-    heart.style.animationDuration = (3 + Math.random()*3)+"s";
-    heart.style.fontSize = (15 + Math.random()*25)+"px";
-    document.body.appendChild(heart);
+dialogueWrap.addEventListener('click', advance);
+sceneArea.addEventListener('click', advance);
 
-    setTimeout(()=>heart.remove(),6000);
+// background stars
+const starsWrap = document.getElementById('stars');
+for(let i=0;i<40;i++){
+  const s = document.createElement('div');
+  s.className = 'star';
+  s.style.left = Math.random()*100 + '%';
+  s.style.top = Math.random()*70 + '%';
+  s.style.animationDelay = (Math.random()*3) + 's';
+  starsWrap.appendChild(s);
 }
-setInterval(createHeart,300);
 </script>
-
 </body>
 </html>
